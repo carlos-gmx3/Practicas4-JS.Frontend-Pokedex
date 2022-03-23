@@ -8,12 +8,45 @@
   <title>Pokedex Launch-X</title>
 </head>
 <body>
-  <main>
+  <header>
+    <div class="rotomHeader">
+      <img src="./media/RotomHeader.png" alt="Rotom">
+      <div class="eyesNormal"></div>
+      <div class="eyesHover"></div>
+      <div class="blinkEyes">
+        <div class="emptyBlink"></div>
+        <a href="#" class="blinkLeft"><img src="./media/RotomHeaderLeftBlink.png" alt=""></a>
+        <a href="#" class="blinkRight"><img src="./media/RotomHeaderRightBlink.png" alt=""></a>
+        <div class="emptyBlink"></div>
+      </div>
+      <div class="jawInput">
+        <div class="rotomSmile">
+          <input type="text" placeholder="Dime que poke buscas" id="pokeSearch" name="pokeName">
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>    
     <div class="container">
       <h1>Pokedex Launch-X</h1>
-      <input type="text" placeholder="Pikachu" id="pokeName" name="pokeName"><br>
-      <img src="media/pokeball.webp" alt="Poke photo" id="pokePhoto"><br>
       <button id="pokeSwap">Cambiar Pokemon</button>
+
+      <div class="pokeDex">
+        <button class="prevArrow">X</button>
+        <div class="pokeData">
+          <h2 id="pokeName">Poke</h2>
+          <div class="graphics">
+            <img id="pokePhoto" class="pokeImg" src="./media/pokeball.webp" alt="Poke photo">
+            <img id="pokeBackground" class="typeBG" src="./media/RotomHeaderEmptyblink.png" alt="type BackGround">
+          </div>
+        </div>
+        <div class="pokeStats">
+          <h2>Stats</h2>
+        </div>
+        <button class="nextArrow">X</button>
+      </div>
+
     </div>
   </main>
   <script src="pokedex.js"></script>

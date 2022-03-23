@@ -1,9 +1,18 @@
 let pokePhoto = document.getElementById('pokePhoto');
-let pokeSearch = document.getElementById('pokeName');
+let pokeBG = document.getElementById('pokeBackground')
+let pokeSearch = document.getElementById('pokeSearch');
 let pokeSwap = document.getElementById('pokeSwap');
 
-function setData (imgURL) {
-  pokePhoto.setAttribute("src", imgURL);
+function setData (pokeObj) {
+  let typeBG = `./media/Types/${pokeObj.types[0].type.name}.jpg`
+  let pokeImg = pokeObj.sprites.front_default;
+  pokePhoto.setAttribute("src", pokeImg);
+  pokeBG.setAttribute("src", typeBG);
+  document.getElementById('pokeName').innerHTML = pokeObj.forms[0].name;
+}
+function setErrorData () {
+  const defaultImg = "./media/WhosThatPoke.png";
+  pokePhoto.setAttribute("src", defaultImg);
 }
 
 function fetchPokemon (poke) {
@@ -16,12 +25,10 @@ function fetchPokemon (poke) {
     }
   }).then((data) => {
     console.log(data);
-    let pokeImg = data.sprites.front_default;
-    setData(pokeImg);
+    setData(data);
   }).catch((error) => {
-    const defaultImg = "./media/sad-pikachu.gif";
     console.log(error);
-    setData(defaultImg);
+    setErrorData();
   })
 }
 

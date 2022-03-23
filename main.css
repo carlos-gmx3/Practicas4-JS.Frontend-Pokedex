@@ -14,6 +14,143 @@ html {
   max-width: 1200px;
   width: 90%;
 }
-img {
-  height: 200px;
+body {
+  background-color: #ddd;
 }
+header {
+  position: relative;
+}
+.rotomHeader {
+  align-items: center;
+  display: flex;
+  flex-flow: column nowrap;
+  position: relative;
+  transition: all ease-in-out .3s;
+  width: 100%;
+}
+.rotomHeader img {
+  position: relative;
+  width: 100%;
+  z-index: 3;
+}
+.eyesNormal {
+  background-image: url(./media/RotomHeaderNormal.png);
+  background-position: top center;
+  background-size: cover;
+  height: 99%;
+  position: absolute;
+  width: 100%;
+  z-index: 1;
+}
+.eyesHover {
+  background-image: url(./media/RotomHeaderHover.png);
+  background-position: top center;
+  background-size: cover;
+  height: 99%;
+  position: absolute;
+  transition: all ease-in-out .3s;
+  visibility: hidden;
+  width: 100%;
+  z-index: 2;
+}
+.blinkEyes {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  height: 99%;
+  position: absolute;
+  width: 100%;
+  z-index: 4;
+}
+.blinkLeft img {
+  height: 99%;
+  visibility: hidden;
+  width: 100%;
+}
+.blinkLeft:hover img {
+  visibility: visible;
+}
+.blinkRight img{
+  height: 99%;
+  visibility: hidden;
+  width: 100%;
+}
+.blinkRight:hover img {
+  visibility: visible;
+}
+.jawInput {
+  align-items: center;
+  background-color: #93d1f5;
+  border-radius: 50%;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: space-evenly;
+  overflow-x: visible;
+  position: absolute;
+  visibility: visible;
+  width: 30%;
+  z-index: 0;
+}
+.rotomSmile {
+  display: grid;
+  grid-template-columns: 1fr 70% 1fr;
+  grid-template-rows: 4fr 1fr 1fr;
+  height: 100%;
+  position: absolute;
+  width: 100%;
+}
+input[type=text]#pokeSearch {
+  background-color: #f58d91;
+  border: 3px solid #111;
+  border-radius: 50% 50%;
+  grid-column-start: 2;
+  grid-column-end: 3;
+  grid-row-start: 2;
+  grid-row-end: 3;
+  height: 70%;
+  padding: .5em;
+  text-align: center;
+  transition: all ease-in-out .3s;
+  width: 50%;
+}
+input[type=text]#pokeSearch:focus {
+  background-color: white;
+  border: 3px solid #306fc2;
+  border-radius: 0 0 50% 50%;
+  width: 100%;
+}
+.jawInput::before {
+  content: "";
+  display: block;
+  padding-top: 0;
+  transition: all ease-in-out .3s;
+}
+.rotomHeader:hover .jawInput::before {
+  padding-top: 100%;
+}
+.pokeDex {
+  align-items: flex-start;
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+}
+.pokeData {
+  width: 30%;
+}
+.graphics {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  position: relative;
+  width: 80%;
+}
+.graphics img.pokeImg {
+  position: absolute;
+  width: 100%;
+}
+.graphics img.typeBG {
+  width: 100%;
+}
+.pokeStats {
+  width: 30%;
+}
+
