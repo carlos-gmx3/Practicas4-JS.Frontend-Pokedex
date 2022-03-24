@@ -1,3 +1,26 @@
+:root {
+  --title: 'Carter One', cursive;
+  --text: 'ABeeZee', sans-serif;
+  --stats: 'Play', sans-serif;
+  --normal: #A8A77A;
+  --fire: #EE8130;
+  --water: #6390F0;
+  --electric: #F7D02C;
+  --grass: #7AC74C;
+  --ice: #96D9D6;
+  --fighting: #C22E28;
+  --poison: #A33EA1;
+  --ground: #E2BF65;
+  --flying: #A98FF3;
+  --psychic: #F95587;
+  --bug: #A6B91A;
+  --rock: #B6A136;
+  --ghost: #735797;
+  --dragon: #6F35FC;
+  --dark: #705746;
+  --steel: #B7B7CE;
+  --fairy: #D685AD;
+}
 html {
   box-sizing: border-box;
   font-size: 100%;
@@ -20,6 +43,15 @@ body {
 header {
   position: relative;
 }
+footer {
+  background-color: red;
+  height: 10px;
+  margin-top: 100px;
+  width: 100%;
+}
+h1 {
+  font-family: var(--title);
+}
 .rotomHeader {
   align-items: center;
   display: flex;
@@ -31,7 +63,7 @@ header {
 .rotomHeader img {
   position: relative;
   width: 100%;
-  z-index: 3;
+  z-index: 4;
 }
 .eyesNormal {
   background-image: url(./media/RotomHeaderNormal.png);
@@ -40,10 +72,10 @@ header {
   height: 99%;
   position: absolute;
   width: 100%;
-  z-index: 1;
+  z-index: 2;
 }
-.eyesHover {
-  background-image: url(./media/RotomHeaderHover.png);
+.eyesStatus {
+  background-image: url(./media/RotomHeaderSearching.png);
   background-position: top center;
   background-size: cover;
   height: 99%;
@@ -51,7 +83,7 @@ header {
   transition: all ease-in-out .3s;
   visibility: hidden;
   width: 100%;
-  z-index: 2;
+  z-index: 3;
 }
 .blinkEyes {
   display: grid;
@@ -59,7 +91,7 @@ header {
   height: 99%;
   position: absolute;
   width: 100%;
-  z-index: 4;
+  z-index: 5;
 }
 .blinkLeft img {
   height: 99%;
@@ -88,7 +120,7 @@ header {
   position: absolute;
   visibility: visible;
   width: 30%;
-  z-index: 0;
+  z-index: 1;
 }
 .rotomSmile {
   display: grid;
@@ -102,6 +134,8 @@ input[type=text]#pokeSearch {
   background-color: #f58d91;
   border: 3px solid #111;
   border-radius: 50% 50%;
+  font-family: var(--stats);
+  font-weight: 400;
   grid-column-start: 2;
   grid-column-end: 3;
   grid-row-start: 2;
@@ -110,7 +144,7 @@ input[type=text]#pokeSearch {
   padding: .5em;
   text-align: center;
   transition: all ease-in-out .3s;
-  width: 50%;
+  width: 70%;
 }
 input[type=text]#pokeSearch:focus {
   background-color: white;
@@ -136,21 +170,67 @@ input[type=text]#pokeSearch:focus {
 .pokeData {
   width: 30%;
 }
+.pokeHeader {
+  align-items: center;
+  display: flex;
+  flex-flow: row nowrap;
+  font-family: var(--stats);
+  font-size: 1.2em;
+  font-weight: 700;
+}
+.pokeHeader img {
+  height: 1.2em;
+}
+#pokeNumber {
+  margin-left: .5em;
+}
+#pokeName {
+  margin-left: .5em;
+  text-transform: capitalize;
+}
 .graphics {
+  background-image: url(./media/RotomHeaderEmptyblink.png);
+  background-position: top center;
+  background-size: cover;
   align-items: center;
   display: flex;
   justify-content: center;
   position: relative;
-  width: 80%;
+  width: 90%;
 }
-.graphics img.pokeImg {
-  position: absolute;
-  width: 100%;
-}
-.graphics img.typeBG {
+#pokePhoto {
+  padding: 5%;
   width: 100%;
 }
 .pokeStats {
   width: 30%;
 }
+.pokeStats h2 {
+  font-family: var(--stats);
+  font-size: 1.2em;
+  font-weight: 700;
+}
+.metaData {
+  font-family: var(--text);
+  font-size: 1.2em;
+}
+.metaData .type {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+#type1, #type2 {
+  background-color: black;
+  border: 3px solid whitesmoke;
+  border-radius: 10px;
+  color: whitesmoke;
+  text-align: center;
+  text-shadow: 0 0 3px #111;
+  text-transform: capitalize;
+  padding: .3em;
+}
+.water {
+  background-color: var(--water);
+}
+
 

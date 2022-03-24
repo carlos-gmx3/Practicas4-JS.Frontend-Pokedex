@@ -6,13 +6,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="main.css" type="text/css">
   <title>Pokedex Launch-X</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=ABeeZee:ital@0;1&family=Carter+One&family=Play:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
   <header>
     <div class="rotomHeader">
       <img src="./media/RotomHeader.png" alt="Rotom">
       <div class="eyesNormal"></div>
-      <div class="eyesHover"></div>
+      <div id="status" class="eyesStatus"></div>
       <div class="blinkEyes">
         <div class="emptyBlink"></div>
         <a href="#" class="blinkLeft"><img src="./media/RotomHeaderLeftBlink.png" alt=""></a>
@@ -34,21 +37,35 @@
 
       <div class="pokeDex">
         <button class="prevArrow">X</button>
-        <div class="pokeData">
-          <h2 id="pokeName">Poke</h2>
-          <div class="graphics">
-            <img id="pokePhoto" class="pokeImg" src="./media/pokeball.webp" alt="Poke photo">
-            <img id="pokeBackground" class="typeBG" src="./media/RotomHeaderEmptyblink.png" alt="type BackGround">
+        <section class="pokeData">
+          <div class="pokeHeader">
+            <img src="./media/pokeballIcon2.png" alt="Ball Icon">
+            <h2 id="pokeNumber">000</h2>
+            <h2 id="pokeName">Poke</h2>
           </div>
-        </div>
-        <div class="pokeStats">
+          <div class="graphics">
+            <img id="pokePhoto" class="pokeImg" src="./media/pokeballIcon.png" alt="Poke photo">
+          </div>
+          <div class="metaData">
+            <div class="type">
+              <p>Tipo: </p>
+              <p></p>
+              <p id="type1" class=""><b>Tipo 1</b></p>
+              <p id="type2" class=""><b>Tipo 2</b></p>
+            </div>
+          </div>
+        </section>
+        <section class="pokeStats">
           <h2>Stats</h2>
-        </div>
+        </section>
         <button class="nextArrow">X</button>
       </div>
 
     </div>
   </main>
+  <footer>
+
+  </footer>
   <script src="pokedex.js"></script>
 </body>
 </html>
