@@ -2,6 +2,9 @@
   --title: 'Carter One', cursive;
   --text: 'ABeeZee', sans-serif;
   --stats: 'Play', sans-serif;
+  --pokeRed: #de2926;
+  --pokeYellow: #ffcb05;
+  --pokeBlue: #306fc2;
   --normal: #A8A77A;
   --fire: #EE8130;
   --water: #6390F0;
@@ -44,7 +47,7 @@ header {
   position: relative;
 }
 footer {
-  background-color: red;
+  background-color: var(--pokeRed);
   height: 10px;
   margin-top: 100px;
   width: 100%;
@@ -252,5 +255,73 @@ input[type=text]#pokeSearch:focus {
   line-height: 1.3em;
   margin-top: .5em;
 }
+.prevButtons, .nextButtons {
+  align-items: center;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: space-evenly;
+  height: 500px;
+  width: 15%;
+}
+#pokeSwap {
+  border: 5px solid black;
+  border-radius: 10px;
+  cursor: pointer;
+  font-family: var(--stats);
+  font-size: 1.2em;
+  font-weight: 700;
+  padding: .5em 1em;
+  position: relative;
+  transition: all ease-in-out .3s;
+  width: 300px;
+  background-color: lightblue;
+  color: black;
+}
+#pokeSwap:hover {
+  background-color: lightblue;
+  color: black;
+  transform: scale(1.1);
+}
+
+.swipePoke, .evChain, .variant {
+  border: 5px solid black;
+  border-radius: 10px;
+  cursor: pointer;
+  font-family: var(--stats);
+  font-size: 1.2em;
+  font-weight: 700;
+  padding: 1em .5em;
+  position: relative;
+  transition: all ease-in-out .3s;
+  width: 100%;
+}
+.variant {
+  background-color: #202020;
+  color: white;
+}
+.variant:hover {
+  background-color: var(--pokeBlue);
+  color: var(--pokeYellow);
+  transform: scale(1.1);
+}
+.swipePoke {
+  background-color: var(--pokeRed);
+  color: white;
+}
+.swipePoke:hover {
+  background-color: var(--pokeBlue);
+  color: var(--pokeYellow);
+  transform: scale(1.1);
+}
+.evChain {
+  background-color: white;
+  color: black;
+}
+.evChain:hover {
+  background-color: var(--pokeBlue);
+  color: var(--pokeYellow);
+  transform: scale(1.1);
+}
+
 
 

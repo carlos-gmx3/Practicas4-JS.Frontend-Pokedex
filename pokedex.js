@@ -49,25 +49,122 @@ let pokeStats = new Chart(
   document.getElementById('pokeStats'),
   config
 );
-let pokeFetch = {};
+let fetchID = 0;
+let fetchName = "";
+let fetchForms = {};
+let fetchEv = {};
 let statusColor = document.getElementById('status');
 let pokeSearch = document.getElementById('pokeSearch');
 let pokeSwap = document.getElementById('pokeSwap');
+let swipePrev = document.getElementById('swipePrev');
+let preEv = document.getElementById('preEv');
+let swipeNext = document.getElementById('swipeNext');
+let nextEv = document.getElementById('nextEv');
+let formSwap = document.getElementById('formSwap');
+let evSwap = document.getElementById('evSwap');
 let pokePhoto = document.getElementById('pokePhoto');
 let pokeBG = document.querySelector('.graphics')
 let type1 = document.getElementById('type1');
 let type2 = document.getElementById('type2');
 
+pokeSwap.addEventListener('click', (e) => {
+  e.preventDefault();
+  fetchPokemon(pokeSearch.value.toLowerCase());
+  pokeSearch.value = "";
+});
+pokeSearch.addEventListener('keyup', (e) => {
+  if (e.key === 'Enter' || e.keyCode === 13){
+    fetchPokemon(pokeSearch.value.toLowerCase());
+    pokeSearch.value = "";
+  }
+});
+swipePrev.addEventListener('click', (e) => {
+  e.preventDefault();
+  if(fetchID > 1) {
+    let prevID = fetchID - 1;
+    fetchPokemon(prevID);
+  }
+});
+swipeNext.addEventListener('click', (e) => {
+  e.preventDefault();
+  if(fetchID < 898) {
+    let nextID = fetchID + 1;
+    fetchPokemon(nextID);
+  }
+});
+preEv.addEventListener('click', (e) => {
+  e.preventDefault();
+  if(!isEmpty(fetchEv)) {
+    if(fetchEv.chain.evolves_to.length > 0) {
+      if(fetchEv.chain.species.name !== fetchName) {
+        if(fetchEv.chain.evolves_to.reduce((acc, item) => {return acc || item})) {
+          fetchPokemon(fetchEv.chain.species.name);
+        }
+        else {
+          if(fetchEv.chain.evolves_to[0].evolves_to.reduce((acc, item) => {return acc || item})) {
+            fetchPokemon(fetchEv.chain.evolves_to[0].species.name);
+          }
+        }
+      }
+    }
+  }
+});
+nextEv.addEventListener('click', (e) => {
+  e.preventDefault();
+  if(!isEmpty(fetchEv)) {
+    if(fetchEv.chain.evolves_to.length > 0) {
+      if(fetchEv.chain.species.name === fetchName) {
+        fetchPokemon(fetchEv.chain.evolves_to[0].species.name);
+
+      }
+      else {
+        if(fetchEv.chain.evolves_to[0].species.name === fetchName) {
+          fetchPokemon(fetchEv.chain.evolves_to[0].evolves_to[0].species.name);
+        
+        }
+      }
+    }
+  }
+});
+
+formSwap.addEventListener('click', (e) => {
+  e.preventDefault();
+  let formIdx = 0;
+  fetchForms.map((item, idx) => {
+    if(item.pokemon.name === fetchName) {
+      formIdx = idx;
+    }
+  });
+  if(formIdx < (fetchForms.length - 1)) {
+    formIdx++;
+  }
+  else {
+    formIdx = 0;
+  }
+  console.log(fetchForms[formIdx].pokemon.name);
+  fetchVariant(fetchForms[formIdx].pokemon.name);
+});
+
+evSwap.addEventListener('click', (e) => {
+  e.preventDefault();
+  let evIdx = 0;
+  
+});
+function isEmpty(object) {
+  for (const property in object) {
+    return false;
+  }
+  return true;
+}
+
 function setData (pokeObj) {
   let typeBG = `./media/Types/${pokeObj.types[0].type.name}.jpg`
   let pokeImg = pokeObj.sprites.front_default;
-  document.getElementById('pokeNumber').innerHTML = pokeObj.id;
-  document.getElementById('pokeName').innerHTML = pokeObj.species.name;
+  document.getElementById('pokeName').innerHTML = pokeObj.name;
   pokePhoto.setAttribute("src", pokeImg);
   pokeBG.style.backgroundImage = `url(${typeBG})`;
   document.getElementById('height').innerHTML = `${pokeObj.height/10} m`;
   document.getElementById('weight').innerHTML = `${pokeObj.weight/10} kg`;
-
   fetch(pokeObj.types[0].type.url).then((res) => {
     if(res.status != '200') {
       console.log(res);
@@ -75,7 +172,6 @@ function setData (pokeObj) {
       return res.json();
     }
   }).then((typeObj) => {
-    console.log(typeObj);
     type1.innerHTML = typeObj.names[5].name;
   }).catch((error) => {
     console.log(error);
@@ -92,7 +188,7 @@ function setData (pokeObj) {
         return res.json();
       }
     }).then((typeObj) => {
-      console.log(typeObj);
+
       type2.innerHTML = typeObj.names[5].name;
     }).catch((error) => {
       console.log(error);
@@ -104,7 +200,6 @@ function setData (pokeObj) {
   else {
     type2.style.visibility = "hidden";
   }
-  fetchSpecies(pokeObj.id);
 }
 
 function setErrorData () {
@@ -120,7 +215,7 @@ function setBio (pokeBio) {
   let entries = [];
   let filterEntries = [];
   let entryIndex = 0;
-  
+  document.getElementById('pokeNumber').innerHTML = pokeBio.id;
   document.getElementById("pokeAka").innerHTML = pokeBio.genera[5].genus;
   for(let i = 0; i < pokeBio.flavor_text_entries.length; i++) {
     if(pokeBio.flavor_text_entries[i].language.name == "es") {
@@ -129,7 +224,6 @@ function setBio (pokeBio) {
     }
   }
   entries = entries.sort();
-  console.log(entries);
   filterEntries = entries.filter(function(item, idx, ary) {
     if(idx == 0) {
       return item;
@@ -140,7 +234,6 @@ function setBio (pokeBio) {
       }
     }
   });
-  console.log(filterEntries);
   document.getElementById("pokeEntry").innerHTML = `
     <ul>
       <li>${filterEntries[0]}</li>
@@ -183,9 +276,10 @@ function fetchPokemon (poke) {
     }
   }).then((data) => {
     blinkStatus('o');
-    pokeFetch = data;
+    fetchID = data.id;
     setData(data);
     setStats(data);
+    fetchSpecies(data.id);
   }).catch((error) => {
     blinkStatus('e');
     console.log(error);
@@ -206,25 +300,83 @@ function fetchSpecies (pokeID) {
       return res.json();
     }
   }).then((data) => {
+    fetchName = data.name;
+    if(data.varieties.length > 1) {
+      formSwap.style.visibility = "visible";
+    }
+    else {
+      formSwap.style.visibility = "hidden";
+    }
+    fetchForms = data.varieties;
     setBio(data);
+    fetchEvChain(data.evolution_chain.url);
+  }).catch((error) => {
+    console.log(error);
+  })
+}
+
+function fetchEvChain (chainURL) {
+  fetch(chainURL).then((res) => {
+    if(res.status != '200') {
+      console.log(res);
+    } else {
+      return res.json();
+    }
+  }).then((data) => {
+    console.log(data);
+    if(data.chain.evolves_to.length > 0) {
+      if(data.chain.evolves_to.length > 1) {
+        evSwap.style.visibility = "visible";
+      }
+      else {
+        if(data.chain.evolves_to[0].evolves_to.length > 0) {
+          if(data.chain.evolves_to[0].evolves_to.length > 1) {
+            evSwap.style.visibility = "visible";
+          }
+          else {
+            evSwap.style.visibility = "hidden";
+          }
+        }
+        else {
+          evSwap.style.visibility = "hidden";
+        }
+      }
+    }
+    else {
+      evSwap.style.visibility = "hidden";
+    }
+    fetchEv = data;
   }).catch((error) => {
     console.log(error);
 
   })
 }
 
-pokeSwap.addEventListener('click', (e) => {
-  e.preventDefault();
-  fetchPokemon(pokeSearch.value.toLowerCase());
-  pokeSearch.value = "";
-})
-pokeSearch.addEventListener('keyup', (e) => {
-  if (e.key === 'Enter' || e.keyCode === 13){
-    fetchPokemon(pokeSearch.value.toLowerCase());
-    pokeSearch.value = "";
-  }
-})
-
+function fetchVariant (varID) {
+  blinkStatus('s');
+  statusColor.style.visibility = "visible";
+  const url = `https://pokeapi.co/api/v2/pokemon/${varID}`;
+  fetch(url).then((res) => {
+    if(res.status != '200') {
+      console.log(res);
+    } else {
+      return res.json();
+    }
+  }).then((data) => {
+    blinkStatus('o');
+    setData(data);
+    setStats(data);
+    fetchName = data.name;
+  }).catch((error) => {
+    blinkStatus('e');
+    console.log(error);
+    setErrorData();
+  })
+  setTimeout(() => {
+    statusColor.style.visibility = "hidden";
+  }, 1300);
+  blinkStatus('s');
+}
 function setStats (pokeObj) {
   data.datasets[0].data = [
     pokeObj.stats[0].base_stat,
