@@ -179,7 +179,7 @@ input[type=text]#pokeSearch:focus {
     padding-top: 70%;
   }
 }
-@media (max-width: 1024px) {
+@media (max-width: 768px) or (orientation: landscape) {
   .jawInput {
     width: 70%;
   }
