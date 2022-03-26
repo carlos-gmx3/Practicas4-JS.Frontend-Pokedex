@@ -179,7 +179,7 @@ input[type=text]#pokeSearch:focus {
     padding-top: 70%;
   }
 }
-@media (max-width: 768px) or (orientation: landscape) {
+@media (max-width: 768px) and (orientation: landscape) {
   .jawInput {
     width: 70%;
   }
@@ -379,6 +379,15 @@ input[type=text]#pokeSearch:focus {
   }
 }
 @media (max-width: 769px) {
+  h1 {
+    padding-left: 10px;
+  }
+  #pokeSwap {
+    margin-left: 10px;
+  }
+  .container {
+    width: 100%;
+  }
   .pokeDex {
     flex-wrap: wrap;
   }
