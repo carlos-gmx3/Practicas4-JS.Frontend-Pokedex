@@ -94,42 +94,25 @@ swipeNext.addEventListener('click', (e) => {
 });
 preEv.addEventListener('click', (e) => {
   e.preventDefault();
-  if(!isEmpty(fetchEv)) {
-    if(fetchEv.chain.evolves_to.length > 0) {
-      if(fetchEv.chain.species.name !== fetchName) {
-        if(fetchEv.chain.evolves_to.reduce((acc, item) => {return acc || item})) {
-          fetchPokemon(fetchEv.chain.species.name);
-        }
-        else {
-          if(fetchEv.chain.evolves_to[0].evolves_to.reduce((acc, item) => {return acc || item})) {
-            fetchPokemon(fetchEv.chain.evolves_to[0].species.name);
-          }
-        }
-      }
-    }
+  let evLine = checkEvLevel("evLine");
+  let evIdx = evLine.findIndex((item) => item === fetchName);
+  if(evIdx > 0) {
+    fetchPokemon(evLine[evIdx - 1]);
   }
 });
 nextEv.addEventListener('click', (e) => {
   e.preventDefault();
-  if(!isEmpty(fetchEv)) {
-    if(fetchEv.chain.evolves_to.length > 0) {
-      if(fetchEv.chain.species.name === fetchName) {
-        fetchPokemon(fetchEv.chain.evolves_to[0].species.name);
-
-      }
-      else {
-        if(fetchEv.chain.evolves_to[0].species.name === fetchName) {
-          fetchPokemon(fetchEv.chain.evolves_to[0].evolves_to[0].species.name);
-        
-        }
-      }
-    }
+  let evLine = checkEvLevel("evLine");
+  let evIdx = evLine.findIndex((item) => item === fetchName);
+  if(evIdx < (evLine.length - 1)) {
+    fetchPokemon(evLine[evIdx + 1]);
   }
 });
 
 formSwap.addEventListener('click', (e) => {
   e.preventDefault();
   let formIdx = 0;
+  console.log(fetchForms);
   fetchForms.map((item, idx) => {
     if(item.pokemon.name === fetchName) {
       formIdx = idx;
@@ -147,15 +130,16 @@ formSwap.addEventListener('click', (e) => {
 
 evSwap.addEventListener('click', (e) => {
   e.preventDefault();
-  let evIdx = 0;
-  
-});
-function isEmpty(object) {
-  for (const property in object) {
-    return false;
+  let eVariants = checkEvLevel("eVariants");
+  let evIdx = eVariants.findIndex((item) => item===fetchName);
+  if(evIdx < (eVariants.length - 1)) {
+    evIdx++;
   }
-  return true;
-}
+  else {
+    evIdx = 0;
+  }
+  fetchPokemon(eVariants[evIdx]);
+});
 
 function setData (pokeObj) {
   let typeBG = `./media/Types/${pokeObj.types[0].type.name}.jpg`
@@ -242,6 +226,92 @@ function setBio (pokeBio) {
     </ul>`;
 }
 
+function checkEvLevel(answer) {
+  let evIdx = -1;
+  let evLevel = [-1, -1];
+  let baseLevel = [];
+  let midLevel = [];
+  let maxLevel = [];
+  let maxLevel2 = [];
+  let sameLevel = [];
+  let findLine = [];
+  baseLevel.push(fetchEv.chain.species.name);
+  findLine.push(fetchEv.chain.species.name);
+
+  if(fetchEv.chain.species.name === fetchName) {
+    evLevel[0] = 0;
+    evLevel[1] = 0;
+    if(fetchEv.chain.evolves_to.length > 0) {
+      findLine.push(fetchEv.chain.evolves_to[0].species.name);
+    }
+  }
+
+  midLevel = fetchEv.chain.evolves_to.map((mid, idx) => {
+    if(mid.species.name === fetchName) {
+      evLevel[0] = 1;
+      evLevel[1] = idx;
+      findLine.push(mid.species.name);
+      if(mid.evolves_to.length > 0) {
+        findLine.push(mid.evolves_to[0].species.name);
+      }
+    }
+    return mid.species.name;
+  });
+  if(fetchEv.chain.evolves_to.length > 0) {
+    maxLevel = fetchEv.chain.evolves_to[0].evolves_to.map((max, idx) => {
+      if(max.species.name === fetchName) {
+        evLevel[0] = 2;
+        evLevel[1] = idx;
+        findLine.push(fetchEv.chain.evolves_to[0].species.name);
+        findLine.push(max.species.name);
+      }
+      return max.species.name;
+    });
+  }
+  if(fetchEv.chain.evolves_to.length > 1) {
+    maxLevel2 = fetchEv.chain.evolves_to[1].evolves_to.map((max2, idx) => {
+      if(max2.species.name === fetchName) {
+        evLevel[0] = 3;
+        evLevel[1] = idx;
+        findLine.push(fetchEv.chain.evolves_to[1].species.name);
+        findLine.push(max2.species.name);
+      }
+      return max2.species.name;
+    });
+  }
+  switch(evLevel[0]) {
+    case 0:
+      sameLevel = baseLevel;
+      break;
+    case 1:
+      sameLevel = midLevel;
+      break;
+    case 2:
+      sameLevel = maxLevel;
+      break;
+    case 3:
+      sameLevel = maxLevel2;
+      break;
+    default:
+      sameLevel = baseLevel;
+      break;
+  }
+
+  switch(answer) {
+    case "evLine":
+      return findLine;
+      break;
+    case "eVariants":
+      return sameLevel;
+      break;
+    case "hasMore":
+      return (sameLevel.length > 1);
+      break;
+    default:
+      return (sameLevel.length > 1);
+      break;
+  }
+}
 function blinkStatus (fetchStatus) {
   let statusImg = "";
   switch(fetchStatus) {
@@ -276,10 +346,9 @@ function fetchPokemon (poke) {
     }
   }).then((data) => {
     blinkStatus('o');
-    fetchID = data.id;
     setData(data);
     setStats(data);
-    fetchSpecies(data.id);
+    fetchSpecies(data.species.url);
   }).catch((error) => {
     blinkStatus('e');
     console.log(error);
@@ -291,8 +360,7 @@ function fetchPokemon (poke) {
   blinkStatus('s');
 }
 
-function fetchSpecies (pokeID) {
-  const url = `https://pokeapi.co/api/v2/pokemon-species/${pokeID}`;
+function fetchSpecies (url) {
   fetch(url).then((res) => {
     if(res.status != '200') {
       console.log(res);
@@ -300,6 +368,7 @@ function fetchSpecies (pokeID) {
       return res.json();
     }
   }).then((data) => {
+    fetchID = data.id;
     fetchName = data.name;
     if(data.varieties.length > 1) {
       formSwap.style.visibility = "visible";
@@ -307,48 +376,12 @@ function fetchSpecies (pokeID) {
     else {
       formSwap.style.visibility = "hidden";
     }
+    
     fetchForms = data.varieties;
     setBio(data);
     fetchEvChain(data.evolution_chain.url);
   }).catch((error) => {
     console.log(error);
-  })
-}
-
-function fetchEvChain (chainURL) {
-  fetch(chainURL).then((res) => {
-    if(res.status != '200') {
-      console.log(res);
-    } else {
-      return res.json();
-    }
-  }).then((data) => {
-    console.log(data);
-    if(data.chain.evolves_to.length > 0) {
-      if(data.chain.evolves_to.length > 1) {
-        evSwap.style.visibility = "visible";
-      }
-      else {
-        if(data.chain.evolves_to[0].evolves_to.length > 0) {
-          if(data.chain.evolves_to[0].evolves_to.length > 1) {
-            evSwap.style.visibility = "visible";
-          }
-          else {
-            evSwap.style.visibility = "hidden";
-          }
-        }
-        else {
-          evSwap.style.visibility = "hidden";
-        }
-      }
-    }
-    else {
-      evSwap.style.visibility = "hidden";
-    }
-    fetchEv = data;
-  }).catch((error) => {
-    console.log(error);
-
   })
 }
 
@@ -366,6 +399,7 @@ function fetchVariant (varID) {
     blinkStatus('o');
     setData(data);
     setStats(data);
+    fetchBaseSpecies(data.species.url);
     fetchName = data.name;
   }).catch((error) => {
     blinkStatus('e');
@@ -377,6 +411,53 @@ function fetchVariant (varID) {
   }, 1300);
   blinkStatus('s');
 }
+
+function fetchBaseSpecies (url) {
+  fetch(url).then((res) => {
+    if(res.status != '200') {
+      console.log(res);
+    } else {
+      return res.json();
+    }
+  }).then((data) => {
+    fetchID = data.id;
+    if(data.varieties.length > 1) {
+      formSwap.style.visibility = "visible";
+    }
+    else {
+      formSwap.style.visibility = "hidden";
+    }
+    
+    fetchForms = data.varieties;
+    setBio(data);
+    fetchEvChain(data.evolution_chain.url);
+  }).catch((error) => {
+    console.log(error);
+  })
+}
+
+function fetchEvChain (chainURL) {
+  fetch(chainURL).then((res) => {
+    if(res.status != '200') {
+      console.log(res);
+    } else {
+      return res.json();
+    }
+  }).then((data) => {
+    console.log(data);
+    fetchEv = data;
+    if(checkEvLevel("hasMore")) {
+      evSwap.style.visibility = "visible";
+    }
+    else {
+      evSwap.style.visibility = "hidden";
+    }
+  }).catch((error) => {
+    console.log(error);
+
+  })
+}
+
 function setStats (pokeObj) {
   data.datasets[0].data = [
     pokeObj.stats[0].base_stat,
