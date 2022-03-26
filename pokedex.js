@@ -96,15 +96,21 @@ swipeNext.addEventListener('click', (e) => {
 preEv.addEventListener('click', (e) => {
   e.preventDefault();
   let evLine = checkEvLevel("evLine");
-  console.log(evLine);
-  console.log(fetchName);
-  console.log(equivTab(fetchName));
   let evIdx = evLine.findIndex((item) => item === fetchName);
   if(evIdx > 0) {
     evIdx--;
   }
-  console.log(evIdx);
-  fetchPokemon(evLine[evIdx]);
+
+  // fetchPokemon(equivTab(evLine[evIdx]));
+  if(fetchFullName.endsWith("alola")) {
+    fetchPokemon(evLine[evIdx] + "-alola");
+  }
+  else if(fetchFullName.endsWith("galar")) {
+    fetchPokemon(evLine[evIdx] + "-galar");
+  }
+  else {
+    fetchPokemon(evLine[evIdx]);
+  }
 });
 nextEv.addEventListener('click', (e) => {
   e.preventDefault();
@@ -113,7 +119,15 @@ nextEv.addEventListener('click', (e) => {
   if(evIdx < (evLine.length - 1)) {
     evIdx++;
   }
-  fetchPokemon(equivTab(evLine[evIdx]));
+  if(fetchFullName.endsWith("alola")) {
+    fetchPokemon(evLine[evIdx] + "-alola");
+  }
+  else if(fetchFullName.endsWith("galar")) {
+    fetchPokemon(evLine[evIdx] + "-galar");
+  }
+  else {
+    fetchPokemon(evLine[evIdx]);
+  }
 });
 
 formSwap.addEventListener('click', (e) => {
@@ -147,12 +161,6 @@ evSwap.addEventListener('click', (e) => {
   fetchPokemon(equivTab(eVariants[evIdx]));
 });
 function equivTab(check) {
-  if(fetchFullName.endsWith("alola")) {
-    return check + "alola";
-  }
-  if(fetchFullName.endsWith("galar")) {
-    return check + "galar";
-  }
   switch(check) {
     case "wormadam-plant":
       return "wormadam";
