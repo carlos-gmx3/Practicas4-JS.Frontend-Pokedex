@@ -206,31 +206,7 @@ input[type=text]#pokeSearch:focus {
   flex-flow: row nowrap;
   width: 100%;
 }
-@media (max-width: 1024px) {
-  .pokeDex {
-    flex-wrap: wrap;
-  }
-  .biology {
-    order: 4;
-  }
-  .nextButtons {
-    order: 3;
-  }
-}
-@media (max-width: 769px) {
-  .pokeDex {
-    flex-wrap: wrap;
-  }
-  .biology {
-    order: 4;
-  }
-  .prevButtons button {
-    transform: rotate(-90deg);
-  }
-  .nextButtons button {
-    transform: rotate(90deg);
-  }
-}
+
 .pokeData {
   width: 30%;
   min-width: 300px;
@@ -384,6 +360,47 @@ input[type=text]#pokeSearch:focus {
   background-color: var(--pokeBlue);
   color: var(--pokeYellow);
   transform: scale(1.1);
+}
+@media (max-width: 1024px) {
+  .pokeDex {
+    flex-wrap: wrap;
+  }
+  .biology {
+    order: 4;
+  }
+  .nextButtons {
+    order: 3;
+  }
+  .swipePoke, .evChain, .variant {
+    font-size: 1.2em;
+    font-weight: 700;
+    padding: .5em .7em;
+    width: 100%;
+  }
+}
+@media (max-width: 769px) {
+  .pokeDex {
+    flex-wrap: wrap;
+  }
+  .biology {
+    order: 4;
+  }
+  .prevButtons, .nextButtons {
+    min-width: 80px;
+    width: 10%;
+  }
+  .prevButtons button {
+    transform: rotate(-90deg);
+  }
+  .nextButtons button {
+    transform: rotate(90deg);
+  }
+  .swipePoke, .evChain, .variant {
+    font-size: 1.2em;
+    font-weight: 700;
+    padding: .2em .5em;
+    width: 120px;
+  }
 }
 
 
