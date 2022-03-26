@@ -155,6 +155,7 @@ input[type=text]#pokeSearch:focus {
   border-radius: 0 0 50% 50%;
   width: 100%;
 }
+
 .jawInput::before {
   content: "";
   display: block;
@@ -164,16 +165,75 @@ input[type=text]#pokeSearch:focus {
 .rotomHeader:hover .jawInput::before {
   padding-top: 100%;
 }
+@media (max-width: 1024px) {
+  .jawInput {
+    width: 45%;
+  }
+  .jawInput::before {
+    content: "";
+    display: block;
+    padding-top: 0;
+    transition: all ease-in-out .3s;
+  }
+  .rotomHeader:hover .jawInput::before {
+    padding-top: 70%;
+  }
+}
+@media (max-width: 1024px) {
+  .jawInput {
+    width: 70%;
+  }
+  .rotomSmile {
+    display: grid;
+    grid-template-rows: 3fr 1fr .5fr;
+  }
+  .jawInput::before {
+    content: "";
+    display: block;
+    padding-top: 0;
+    transition: all ease-in-out .3s;
+  }
+  .rotomHeader:hover .jawInput::before {
+    padding-top: 40%;
+  }
+}
 
 /* Main */
 .pokeDex {
   align-items: flex-start;
   display: flex;
   justify-content: space-around;
+  flex-flow: row nowrap;
   width: 100%;
+}
+@media (max-width: 1024px) {
+  .pokeDex {
+    flex-wrap: wrap;
+  }
+  .biology {
+    order: 4;
+  }
+  .nextButtons {
+    order: 3;
+  }
+}
+@media (max-width: 769px) {
+  .pokeDex {
+    flex-wrap: wrap;
+  }
+  .biology {
+    order: 4;
+  }
+  .prevButtons button {
+    transform: rotate(-90deg);
+  }
+  .nextButtons button {
+    transform: rotate(90deg);
+  }
 }
 .pokeData {
   width: 30%;
+  min-width: 300px;
 }
 .pokeHeader {
   align-items: center;
@@ -210,12 +270,14 @@ input[type=text]#pokeSearch:focus {
 }
 .biology {
   width: 30%;
+  min-width: 300px;
 }
 .biology h2 {
   font-family: var(--stats);
   font-size: 1.2em;
   font-weight: 700;
 }
+
 .metaData {
   font-family: var(--text);
   font-size: 1.2em;
@@ -260,8 +322,9 @@ input[type=text]#pokeSearch:focus {
   display: flex;
   flex-flow: column nowrap;
   justify-content: space-evenly;
-  height: 500px;
+  height: 600px;
   width: 15%;
+  min-width: 160px;
 }
 #pokeSwap {
   border: 5px solid black;
