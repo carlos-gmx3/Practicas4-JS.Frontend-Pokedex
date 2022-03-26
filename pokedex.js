@@ -51,6 +51,7 @@ let pokeStats = new Chart(
 );
 let fetchID = 0;
 let fetchName = "";
+let fetchFullName = "";
 let fetchForms = {};
 let fetchEv = {};
 let statusColor = document.getElementById('status');
@@ -95,26 +96,31 @@ swipeNext.addEventListener('click', (e) => {
 preEv.addEventListener('click', (e) => {
   e.preventDefault();
   let evLine = checkEvLevel("evLine");
+  console.log(evLine);
+  console.log(fetchName);
+  console.log(equivTab(fetchName));
   let evIdx = evLine.findIndex((item) => item === fetchName);
   if(evIdx > 0) {
-    fetchPokemon(evLine[evIdx - 1]);
+    evIdx--;
   }
+  console.log(evIdx);
+  fetchPokemon(evLine[evIdx]);
 });
 nextEv.addEventListener('click', (e) => {
   e.preventDefault();
   let evLine = checkEvLevel("evLine");
   let evIdx = evLine.findIndex((item) => item === fetchName);
   if(evIdx < (evLine.length - 1)) {
-    fetchPokemon(evLine[evIdx + 1]);
+    evIdx++;
   }
+  fetchPokemon(equivTab(evLine[evIdx]));
 });
 
 formSwap.addEventListener('click', (e) => {
   e.preventDefault();
   let formIdx = 0;
-  console.log(fetchForms);
   fetchForms.map((item, idx) => {
-    if(item.pokemon.name === fetchName) {
+    if(item.pokemon.name === fetchFullName) {
       formIdx = idx;
     }
   });
@@ -124,23 +130,59 @@ formSwap.addEventListener('click', (e) => {
   else {
     formIdx = 0;
   }
-  console.log(fetchForms[formIdx].pokemon.name);
+  console.log(fetchForms);
   fetchVariant(fetchForms[formIdx].pokemon.name);
 });
 
 evSwap.addEventListener('click', (e) => {
   e.preventDefault();
   let eVariants = checkEvLevel("eVariants");
-  let evIdx = eVariants.findIndex((item) => item===fetchName);
+  let evIdx = eVariants.findIndex((item) => item === fetchName);
   if(evIdx < (eVariants.length - 1)) {
     evIdx++;
   }
   else {
     evIdx = 0;
   }
-  fetchPokemon(eVariants[evIdx]);
+  fetchPokemon(equivTab(eVariants[evIdx]));
 });
-
+function equivTab(check) {
+  if(fetchFullName.endsWith("alola")) {
+    return check + "alola";
+  }
+  if(fetchFullName.endsWith("galar")) {
+    return check + "galar";
+  }
+  switch(check) {
+    case "wormadam-plant":
+      return "wormadam";
+      break;
+    case "wormadam-sandy":
+      return "wormadam";
+      break;
+    case "wormadam-trash":
+      return "wormadam";
+      break;
+    case "wormadam-trash":
+      return "wormadam";
+      break;
+    case "wormadam":
+      return "wormadam-plant";
+      break;
+    case "toxtricity-amped":
+      return "toxtricity";
+      break;
+    case "toxtricity-low-key":
+      return "toxtricity";
+      break;
+    case "toxtricity":
+      return "toxtricity-amped";
+      break;
+    default:
+      return check;
+      break;
+  }
+}
 function setData (pokeObj) {
   let typeBG = `./media/Types/${pokeObj.types[0].type.name}.jpg`
   let pokeImg = pokeObj.sprites.front_default;
@@ -233,16 +275,24 @@ function checkEvLevel(answer) {
   let midLevel = [];
   let maxLevel = [];
   let maxLevel2 = [];
-  let sameLevel = [];
+  let baseLevelSpUrl = [];
+  let midLevelSpUrl = [];
+  let maxLevelSpUrl = [];
+  let maxLevel2SpUrl = [];
+  let sameLevelSpUrl = [];
+  let findLineSpUrl = [];
   let findLine = [];
   baseLevel.push(fetchEv.chain.species.name);
   findLine.push(fetchEv.chain.species.name);
+  baseLevelSpUrl.push(fetchEv.chain.species.url);
+  findLineSpUrl.push(fetchEv.chain.species.url);
 
   if(fetchEv.chain.species.name === fetchName) {
     evLevel[0] = 0;
     evLevel[1] = 0;
     if(fetchEv.chain.evolves_to.length > 0) {
       findLine.push(fetchEv.chain.evolves_to[0].species.name);
+      findLineSpUrl.push(fetchEv.chain.evolves_to[0].species.url);
     }
   }
 
@@ -251,10 +301,13 @@ function checkEvLevel(answer) {
       evLevel[0] = 1;
       evLevel[1] = idx;
       findLine.push(mid.species.name);
+      findLineSpUrl.push(mid.species.url);
       if(mid.evolves_to.length > 0) {
         findLine.push(mid.evolves_to[0].species.name);
+        findLineSpUrl.push(mid.evolves_to[0].species.url);
       }
     }
+    midLevelSpUrl.push(mid.species.url);
     return mid.species.name;
   });
   if(fetchEv.chain.evolves_to.length > 0) {
@@ -264,7 +317,10 @@ function checkEvLevel(answer) {
         evLevel[1] = idx;
         findLine.push(fetchEv.chain.evolves_to[0].species.name);
         findLine.push(max.species.name);
+        findLineSpUrl.push(fetchEv.chain.evolves_to[0].species.url);
+        findLineSpUrl.push(max.species.url);
       }
+      maxLevelSpUrl.push(max.species.url);
       return max.species.name;
     });
   }
@@ -275,27 +331,43 @@ function checkEvLevel(answer) {
         evLevel[1] = idx;
         findLine.push(fetchEv.chain.evolves_to[1].species.name);
         findLine.push(max2.species.name);
+        findLineSpUrl.push(fetchEv.chain.evolves_to[1].species.url);
+        findLineSpUrl.push(max2.species.url);
       }
+      maxLevel2SpUrl.push(max2.species.url);
       return max2.species.name;
     });
   }
   switch(evLevel[0]) {
     case 0:
       sameLevel = baseLevel;
+      sameLevelSpUrl = baseLevelSpUrl;
       break;
     case 1:
       sameLevel = midLevel;
+      sameLevelSpUrl = midLevelSpUrl;
       break;
     case 2:
       sameLevel = maxLevel;
+      sameLevelSpUrl = maxLevelSpUrl;
       break;
     case 3:
       sameLevel = maxLevel2;
+      sameLevelSpUrl = maxLevel2SpUrl;
       break;
     default:
       sameLevel = baseLevel;
+      sameLevelSpUrl = baseLevelSpUrl;
       break;
   }
+
+  // sameLevel = sameLevelSpUrl.map((u) => {
+  //   return getVarieties(u);
+  // });
+
+  // findLine = findLineSpUrl.map((u) => {
+  //   return getVarieties(u);
+  // });
 
   switch(answer) {
     case "evLine":
@@ -348,6 +420,8 @@ function fetchPokemon (poke) {
     blinkStatus('o');
     setData(data);
     setStats(data);
+    console.log(data.name);
+    fetchFullName = data.name;
     fetchSpecies(data.species.url);
   }).catch((error) => {
     blinkStatus('e');
@@ -370,6 +444,8 @@ function fetchSpecies (url) {
   }).then((data) => {
     fetchID = data.id;
     fetchName = data.name;
+    // console.log("Name " + fetchName);
+    // console.log("Full " + fetchFullName);
     if(data.varieties.length > 1) {
       formSwap.style.visibility = "visible";
     }
@@ -400,7 +476,8 @@ function fetchVariant (varID) {
     setData(data);
     setStats(data);
     fetchBaseSpecies(data.species.url);
-    fetchName = data.name;
+    //fetchName = data.name;
+    fetchFullName = data.name;
   }).catch((error) => {
     blinkStatus('e');
     console.log(error);
@@ -436,6 +513,23 @@ function fetchBaseSpecies (url) {
   })
 }
 
+async function getVarieties(url) {
+  let varietyName = "";
+  await fetch(url).then((res) => {
+    if(res.status != '200') {
+      console.log(res);
+    } else {
+      return res.json();
+    }
+  }).then((data) => {
+    varietyName = data.varieties[0].pokemon.name;
+  }).catch((error) => {
+    console.log(error);
+    varietyName = "Nope";
+  })
+  return varietyName;
+}
+
 function fetchEvChain (chainURL) {
   fetch(chainURL).then((res) => {
     if(res.status != '200') {
@@ -444,7 +538,6 @@ function fetchEvChain (chainURL) {
       return res.json();
     }
   }).then((data) => {
-    console.log(data);
     fetchEv = data;
     if(checkEvLevel("hasMore")) {
       evSwap.style.visibility = "visible";
