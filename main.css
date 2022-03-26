@@ -169,15 +169,9 @@ input[type=text]#pokeSearch:focus {
   .jawInput {
     width: 45%;
   }
-  .jawInput::before {
-    content: "";
-    display: block;
-    padding-top: 0;
-    transition: all ease-in-out .3s;
-  }
   .rotomHeader:hover .jawInput::before {
     padding-top: 70%;
-  }
+  } 
 }
 @media (max-width: 768px) and (orientation: landscape) {
   .jawInput {
@@ -186,12 +180,6 @@ input[type=text]#pokeSearch:focus {
   .rotomSmile {
     display: grid;
     grid-template-rows: 3fr 1fr .5fr;
-  }
-  .jawInput::before {
-    content: "";
-    display: block;
-    padding-top: 0;
-    transition: all ease-in-out .3s;
   }
   .rotomHeader:hover .jawInput::before {
     padding-top: 40%;
