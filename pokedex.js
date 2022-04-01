@@ -191,6 +191,24 @@ function equivTab(check) {
       break;
   }
 }
+const get1stType = async (url) => {
+  try {
+    const res = await fetch(url);
+    let typeObj = await res.json();
+    type1.innerHTML = typeObj.names[5].name;
+  } catch(err) {
+    console.log(err);
+  }
+}
+const get2ndType = async (url) => {
+  try {
+    const res = await fetch(url);
+    let typeObj = await res.json();
+    type2.innerHTML = typeObj.names[5].name;
+  } catch(err) {
+    console.log(err);
+  }
+}
 function setData (pokeObj) {
   let typeBG = `./media/Types/${pokeObj.types[0].type.name}.jpg`
   let pokeImg = pokeObj.sprites.front_default;
@@ -199,35 +217,13 @@ function setData (pokeObj) {
   pokeBG.style.backgroundImage = `url(${typeBG})`;
   document.getElementById('height').innerHTML = `${pokeObj.height/10} m`;
   document.getElementById('weight').innerHTML = `${pokeObj.weight/10} kg`;
-  fetch(pokeObj.types[0].type.url).then((res) => {
-    if(res.status != '200') {
-      console.log(res);
-    } else {
-      return res.json();
-    }
-  }).then((typeObj) => {
-    type1.innerHTML = typeObj.names[5].name;
-  }).catch((error) => {
-    console.log(error);
-    type1.innerHTML = pokeObj.types[0].type.name;
-  })
+
+  get1stType(pokeObj.types[0].type.url);
   type1.style.backgroundColor = `var(--${pokeObj.types[0].type.name})`;
   type1.style.visibility = "visible";
 
   if(pokeObj.types.length > 1) {
-    fetch(pokeObj.types[1].type.url).then((res) => {
-      if(res.status != '200') {
-        console.log(res);
-      } else {
-        return res.json();
-      }
-    }).then((typeObj) => {
-
-      type2.innerHTML = typeObj.names[5].name;
-    }).catch((error) => {
-      console.log(error);
-      type2.innerHTML = pokeObj.types[1].type.name;
-    })
+    get2ndType(pokeObj.types[1].type.url);
     type2.style.backgroundColor = `var(--${pokeObj.types[1].type.name})`;
     type2.style.visibility = "visible";
   }
@@ -369,12 +365,14 @@ function checkEvLevel(answer) {
       break;
   }
 
-  // sameLevel = sameLevelSpUrl.map((u) => {
-  //   return getVarieties(u);
+  // let newSame = Array.from(sameLevelSpUrl, async (u) => {
+  //   let variety = await getVarieties(u);
+  //   return variety;
   // });
 
-  // findLine = findLineSpUrl.map((u) => {
-  //   return getVarieties(u);
+  // let newLine = Array.from(findLineSpUrl, async (u) => {
+  //   let variety = await getVarieties(u);
+  //   return variety;
   // });
 
   switch(answer) {
@@ -438,7 +436,7 @@ function fetchPokemon (poke) {
   })
   setTimeout(() => {
     statusColor.style.visibility = "hidden";
-  }, 1300);
+  }, 1000);
   blinkStatus('s');
 }
 
@@ -493,7 +491,7 @@ function fetchVariant (varID) {
   })
   setTimeout(() => {
     statusColor.style.visibility = "hidden";
-  }, 1300);
+  }, 1000);
   blinkStatus('s');
 }
 
@@ -521,21 +519,33 @@ function fetchBaseSpecies (url) {
   })
 }
 
+// async function getVarieties(url) {
+//   let varietyName = "";
+//   await fetch(url).then((res) => {
+//     if(res.status != '200') {
+//       console.log(res);
+//     } else {
+//       return res.json();
+//     }
+//   }).then((data) => {
+//     varietyName = data.varieties[0].pokemon.name;
+//   }).catch((error) => {
+//     console.log(error);
+//     varietyName = "Nope";
+//   })
+//   return varietyName;
+// }
 async function getVarieties(url) {
-  let varietyName = "";
-  await fetch(url).then((res) => {
-    if(res.status != '200') {
-      console.log(res);
-    } else {
-      return res.json();
-    }
-  }).then((data) => {
-    varietyName = data.varieties[0].pokemon.name;
-  }).catch((error) => {
+  try {
+    const res = await fetch(url);
+    let data = await res.json();
+    let variety = data.varieties[0].pokemon.name;
+    console.log(variety);
+    return variety;
+  } catch (error) {
     console.log(error);
-    varietyName = "Nope";
-  })
-  return varietyName;
+    return "Nope";
+  }
 }
 
 function fetchEvChain (chainURL) {
