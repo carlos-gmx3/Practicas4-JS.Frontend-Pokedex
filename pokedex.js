@@ -88,7 +88,7 @@ swipePrev.addEventListener('click', (e) => {
 });
 swipeNext.addEventListener('click', (e) => {
   e.preventDefault();
-  if(fetchID < 898) {
+  if(fetchID < 1008) {
     let nextID = fetchID + 1;
     fetchPokemon(nextID);
   }
@@ -234,7 +234,7 @@ function setData (pokeObj) {
 
 function setErrorData () {
   const defaultImg = "./media/WhosThatPoke.png";
-  document.getElementById('pokeNumber').innerHTML = 000;
+  document.getElementById('pokeNumber').innerHTML = 0;
   document.getElementById('pokeName').innerHTML = "Quien es ese Pokemon?";
   pokePhoto.setAttribute("src", defaultImg);
   pokeBG.style.backgroundImage = `url("./media/RotomHeaderEmptyblink.png")`
